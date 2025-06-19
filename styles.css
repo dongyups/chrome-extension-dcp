@@ -1,0 +1,20 @@
+/* .text-select-icon {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  z-index: 9999;
+  cursor: pointer;
+}
+
+.text-output-box {
+  position: absolute;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 6px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  white-space: pre-wrap;
+  font-family: monospace;
+  font-size: 14px;
+  z-index: 9999;
+} */
