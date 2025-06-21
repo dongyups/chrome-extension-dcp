@@ -1,6 +1,7 @@
 let icon = null;
 let selectedText = "";
 let isDragging = false;
+let serverurl = "";
 
 document.addEventListener("mousedown", () => {
   isDragging = false;
@@ -29,11 +30,24 @@ document.addEventListener("mouseup", (event) => {
     icon.style.height = "32px";
     icon.style.zIndex = 10000;
 
+    // 페이지내 floating box
     icon.addEventListener("click", () => {
-      chrome.storage.local.set({ selectedText }); // 저장
-      showTextPopup(event.pageX + 10, event.pageY + 50);
+      chrome.storage.local.set({ selectedText });
+      // 아이콘 위치 기준으로 박스
+      const rect = icon.getBoundingClientRect();
+      const x = rect.right + window.scrollX;
+      const y = rect.bottom + window.scrollY;
+
+      showTextPopup(x, y);
       removeIconOnly();
     });
+
+    // // 확장프로그램내 floating box
+    // icon.addEventListener("click", () => {
+    //   chrome.storage.local.set({ selectedText }); // 저장
+    //   showTextPopup(event.pageX + 10, event.pageY + 50);
+    //   removeIconOnly();
+    // });
 
     document.body.appendChild(icon);
   } else {
@@ -53,14 +67,39 @@ document.addEventListener("mousedown", (event) => {
   removeExistingUI();
 });
 
+// 페이지내 floating box
 function showTextPopup(x, y) {
+  document.querySelectorAll(".text-output-box").forEach(el => el.remove());
+
   const box = document.createElement("div");
   box.className = "text-output-box";
+  box.style.position = "absolute";
   box.style.left = `${x}px`;
   box.style.top = `${y}px`;
-  box.innerText = `Original: ${selectedText}\nTranslate: ${selectedText} :D`;
+  box.style.background = "white";
+  box.style.border = "1px solid #ccc";
+  box.style.padding = "10px";
+  box.style.borderRadius = "8px";
+  box.style.boxShadow = "0 2px 6px rgba(0,0,0,0.2)";
+  box.style.zIndex = 10000;
+  box.style.whiteSpace = "pre-line"; // 줄바꿈 처리
+
+  const original = selectedText || "None Selected";
+  const translated = original + " :D";
+
+  box.innerText = `Original: ${original}\nTranslate: ${translated}`;
   document.body.appendChild(box);
 }
+
+// // 확장프로그램내 floating box
+// function showTextPopup(x, y) {
+//   const box = document.createElement("div");
+//   box.className = "text-output-box";
+//   box.style.left = `${x}px`;
+//   box.style.top = `${y}px`;
+//   box.innerText = `Original: ${selectedText}\nTranslate: ${selectedText} :D`;
+//   document.body.appendChild(box);
+// }
 
 function removeExistingUI() {
   if (icon) icon.remove();
@@ -77,3 +116,11 @@ function clearSelectionData() {
   selectedText = "";
   chrome.storage.local.remove("selectedText");
 }
+
+
+// function ServerURL(){
+//   document.getElementById('Server').value='';
+// }
+// window.onload = function(){
+//   document.getElementById('URL').onclick=ServerURL;
+// }
